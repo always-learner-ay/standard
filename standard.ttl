@@ -1,0 +1,104 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix edu: <http://example.org/ontology/edu/> .
+@prefix res: <http://example.org/resources/> .
+
+### --- [국어] Achievement Standards & Live Resources --- ###
+
+# 읽기 (Reading)
+edu:KOR_20201 a edu:Standard ; dc:identifier "2국02-01" ; dc:title "글자, 단어, 문장, 짧은 글을 정확하게 소리 내어 읽는다." .
+res:KOR_R1 edu:supports edu:KOR_20201 ; dc:source <https://www.edunet.net/nview.do?contentsNo=202115> .
+
+edu:KOR_20202 a edu:Standard ; dc:identifier "2국02-02" ; dc:title "의미가 잘 드러나도록 문장과 짧은 글을 알맞게 띄어 읽는다." .
+res:KOR_R2 edu:supports edu:KOR_20202 ; dc:source <https://www.edunet.net/nview.do?contentsNo=202117> .
+
+edu:KOR_20203 a edu:Standard ; dc:identifier "2국02-03" ; dc:title "글을 읽고 중심 내용을 확인한다." .
+res:KOR_R3 edu:supports edu:KOR_20203 ; dc:source <https://primary.ebs.co.kr/course/view?courseId=10204515> .
+
+edu:KOR_20204 a edu:Standard ; dc:identifier "2국02-04" ; dc:title "인물의 마음이나 생각을 짐작하고 이를 자신과 비교하며 글을 읽는다." .
+res:KOR_R4 edu:supports edu:KOR_20204 ; dc:source <https://www.edunet.net/nview.do?contentsNo=202123> .
+
+edu:KOR_20205 a edu:Standard ; dc:identifier "2국02-05" ; dc:title "읽기에 흥미를 가지고 즐겨 읽는 태도를 지닌다." .
+res:KOR_R5 edu:supports edu:KOR_20205 ; dc:source <http://www.bookteen.or.kr> .
+
+# 듣기·말하기 (Listening & Speaking)
+edu:KOR_20101 a edu:Standard ; dc:identifier "2국01-01" ; dc:title "중요한 내용이나 일이 일어난 순서를 고려하며 듣고 말한다." .
+res:KOR_L1 edu:supports edu:KOR_20101 ; dc:source <https://www.edunet.net/nview.do?contentsNo=202081> .
+
+edu:KOR_20102 a edu:Standard ; dc:identifier "2국01-02" ; dc:title "바르고 고운 말로 서로의 감정을 나누며 듣고 말한다." .
+res:KOR_L2 edu:supports edu:KOR_20102 ; dc:source <https://primary.ebs.co.kr/course/view?courseId=10204512> .
+
+edu:KOR_20103 a edu:Standard ; dc:identifier "2국01-03" ; dc:title "상대의 말을 집중하여 듣고 말차례를 지키며 대화한다." .
+res:KOR_L3 edu:supports edu:KOR_20103 ; dc:source <https://www.edunet.net/nview.do?contentsNo=202085> .
+
+edu:KOR_20104 a edu:Standard ; dc:identifier "2국01-04" ; dc:title "자신의 경험이나 생각을 바른 자세로 발표한다." .
+res:KOR_L4 edu:supports edu:KOR_20104 ; dc:source <https://www.edunet.net/nview.do?contentsNo=202087> .
+
+edu:KOR_20105 a edu:Standard ; dc:identifier "2국01-05" ; dc:title "듣기와 말하기에 관심과 흥미를 가진다." .
+res:KOR_L5 edu:supports edu:KOR_20105 ; dc:source <https://www.edunet.net/nview.do?contentsNo=202089> .
+
+
+### --- [사회] Achievement Standards & Live Resources --- ###
+
+edu:SOC_40201 a edu:Standard ; dc:identifier "4사02-01" ; dc:title "일상 속에서 시간의 흐름을 통한 역사의 시간 개념 이해" .
+res:SOC_S1 edu:supports edu:SOC_40201 ; dc:source <https://www.edunet.net/nview.do?contentsNo=210165> .
+
+edu:SOC_40202 a edu:Standard ; dc:identifier "4사02-02" ; dc:title "오래된 물건이나 자료들을 통해 과거의 모습 살펴보기" .
+res:SOC_S2 edu:supports edu:SOC_40202 ; dc:source <http://www.emuseum.go.kr> .
+
+edu:SOC_40203 a edu:Standard ; dc:identifier "4사02-03" ; dc:title "지역의 변화상을 보여주는 역사 자료 분석" .
+res:SOC_S3 edu:supports edu:SOC_40203 ; dc:source <http://www.grandculture.net> .
+
+edu:SOC_40301 a edu:Standard ; dc:identifier "4사03-01" ; dc:title "최근 사회 변화의 양상과 특징 파악" .
+res:SOC_S4 edu:supports edu:SOC_40301 ; dc:source <https://kostat.go.kr/total/index.action> .
+
+edu:SOC_40302 a edu:Standard ; dc:identifier "4사03-02" ; dc:title "문화 다양성 확산 및 문화 존중 태도" .
+res:SOC_S5 edu:supports edu:SOC_40302 ; dc:source <https://www.multiculture.go.kr> .
+
+edu:SOC_40401 a edu:Standard ; dc:identifier "4사04-01" ; dc:title "옛날 풍습과 오늘날의 변화상 비교" .
+res:SOC_S6 edu:supports edu:SOC_40401 ; dc:source <https://www.nfm.go.kr> .
+
+edu:SOC_40402 a edu:Standard ; dc:identifier "4사04-02" ; dc:title "교통의 변화에 따른 이동과 생활 모습의 변화" .
+res:SOC_S7 edu:supports edu:SOC_40402 ; dc:source <https://www.edunet.net/nview.do?contentsNo=210211> .
+
+edu:SOC_40403 a edu:Standard ; dc:identifier "4사04-03" ; dc:title "통신수단의 변화에 따른 의사소통 방식의 변화" .
+res:SOC_S8 edu:supports edu:SOC_40403 ; dc:source <https://www.edunet.net/nview.do?contentsNo=210213> .
+
+edu:SOC_40501 a edu:Standard ; dc:identifier "4사05-01" ; dc:title "지도의 종류와 지도의 요소 이해" .
+res:SOC_S9 edu:supports edu:SOC_40501 ; dc:source <https://map.ngii.go.kr> .
+
+edu:SOC_40502 a edu:Standard ; dc:identifier "4사05-02" ; dc:title "지도에서 우리 지역의 위치 파악 및 정보 탐색" .
+res:SOC_S10 edu:supports edu:SOC_40502 ; dc:title "V-World" ; dc:source <https://www.vworld.kr> .
+
+
+### --- [영어] Achievement Standards & Live Resources --- ###
+
+edu:ENG_40101 a edu:Standard ; dc:identifier "4영01-01" ; dc:title "알파벳과 간단한 단어 소리 식별" .
+res:ENG_E1 edu:supports edu:ENG_40101 ; dc:source <https://primary.ebs.co.kr/course/view?courseId=10203531> .
+
+edu:ENG_40102 a edu:Standard ; dc:identifier "4영01-02" ; dc:title "알파벳 대소문자 식별 및 읽기" .
+res:ENG_E2 edu:supports edu:ENG_40102 ; dc:source <https://www.starfall.com/h/abcs/> .
+
+edu:ENG_40103 a edu:Standard ; dc:identifier "4영01-03" ; dc:title "단어, 어구, 문장의 강세, 리듬, 억양 식별" .
+res:ENG_E3 edu:supports edu:ENG_40103 ; dc:source <https://learnenglishkids.britishcouncil.org/listen-watch> .
+
+edu:ENG_40104 a edu:Standard ; dc:identifier "4영01-04" ; dc:title "소리와 철자의 관계 이해 및 소리 내어 읽기" .
+res:ENG_E4 edu:supports edu:ENG_40104 ; dc:source <https://www.edunet.net/nview.do?contentsNo=202353> .
+
+edu:ENG_40105 a edu:Standard ; dc:identifier "4영01-05" ; dc:title "단어, 어구, 문장의 의미 이해" .
+res:ENG_E5 edu:supports edu:ENG_40105 ; dc:source <https://primary.ebs.co.kr/course/view?courseId=10203534> .
+
+edu:ENG_40106 a edu:Standard ; dc:identifier "4영01-06" ; dc:title "자기 주변 주제 담화의 주요 정보 파악" .
+res:ENG_E6 edu:supports edu:ENG_40106 ; dc:source <https://www.edunet.net/nview.do?contentsNo=202357> .
+
+edu:ENG_40107 a edu:Standard ; dc:identifier "4영01-07" ; dc:title "전략 활용 담화/문장 듣기 및 읽기" .
+res:ENG_E7 edu:supports edu:ENG_40107 ; dc:source <https://www.readingrockets.org> .
+
+edu:ENG_40108 a edu:Standard ; dc:identifier "4영01-08" ; dc:title "다양한 매체 담화나 문장에 흥미 갖기" .
+res:ENG_E8 edu:supports edu:ENG_40108 ; dc:source <https://pbskids.org/games/reading> .
+
+edu:ENG_40109 a edu:Standard ; dc:identifier "4영01-09" ; dc:title "시, 노래, 이야기를 공감하며 듣기" .
+res:ENG_E9 edu:supports edu:ENG_40109 ; dc:source <https://www.youtube.com/@SuperSimpleSongs> .
+
+edu:ENG_40110 a edu:Standard ; dc:identifier "4영01-10" ; dc:title "문화 담화나 문장을 존중의 태도로 듣기/읽기" .
+res:ENG_E10 edu:supports edu:ENG_40110 ; dc:source <https://kids.nationalgeographic.com> .
