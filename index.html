@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초등학교 교육과정 로드맵</title>
+    <!-- Vis.js -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Pretty Blue Gradient (Deep Royal Blue to Cyan Teal) */
+            --bg-main: linear-gradient(135deg, #1A2980 0%, #26D0CE 100%);
+            --panel-glass: rgba(255, 255, 255, 0.15);
+            --panel-border: 1px solid rgba(255, 255, 255, 0.3);
+            --text-main: #ffffff;
+            --text-sub: #e0e0e0;
+            --accent: #00d2ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background: var(--bg-main);
+            height: 100vh;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header Title */
+        .main-header {
+            flex: 0 0 auto;
+            /* Don't shrink */
+            text-align: center;
+            padding: 20px 0 10px 0;
+            z-index: 10;
+        }
+
+        .main-header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            letter-spacing: -0.5px;
+        }
+
+        /* Container filling remaining space */
+        .container {
+            flex: 1;
+            display: flex;
+            width: 100%;
+            padding: 10px 40px 40px 40px;
+            gap: 30px;
+            overflow: hidden;
+            /* Prevent body scroll */
+        }
+
+        /* Chatbot Panel */
+        .panel {
+            background: var(--panel-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: var(--panel-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chatbot-container {
+            flex: 1;
+            min-width: 320px;
+            max-width: 25%;
+        }
+
+        .graph-container {
+            flex: 3;
+            position: relative;
+        }
+
+        /* Chat Styles */
+        .chat-header {
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-msg {
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            max-width: 85%;
+            word-break: keep-all;
+        }
+
+        .bot {
+            background: rgba(255, 255, 255, 0.1);
+            color: #eee;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .user {
+            background: var(--accent);
+            color: #003;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+            font-weight: 600;
+        }
+
+        .chat-input-box {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-box input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .chat-input-box input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .chat-input-box button {
+            padding: 0 20px;
+            border-radius: 12px;
+            border: none;
+            background: var(--accent);
+            color: #003;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chat-input-box button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        /* Graph Overlay UI */
+        .nav-icons {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.15);
+            background: white;
+            color: #333;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .footer-msg {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 1.1rem;
+            pointer-events: none;
+            opacity: 0.9;
+            transition: text-shadow 0.3s;
+        }
+
+        #mynetwork {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="main-header">
+        <h1>초등 교육 성취기준과 도움자료</h1>
+    </header>
+
+    <div class="container">
+        <!-- Left Panel: Intelligent Chatbot -->
+        <aside class="panel chatbot-container">
+            <div class="chat-header">AI CURRICULUM BOT</div>
+            <div class="chat-body" id="chatHistory">
+                <div class="chat-msg bot">
+                    안녕하세요.<br>초등학교 교육과정 도우미입니다.<br>원하는 내용을 편하게 질문해주세요.
+                </div>
+            </div>
+            <div class="chat-input-box">
+                <input type="text" id="chatInput" placeholder="질문 입력..." onkeypress="handleEnter(event)">
+                <button onclick="sendMsg()">Send</button>
+            </div>
+        </aside>
+
+        <!-- Right Panel: Interactive Graph -->
+        <main class="panel graph-container">
+            <!-- Navigation Icons -->
+            <div class="nav-icons" id="navIcons" style="display: none;">
+                <div class="nav-btn" onclick="selectSubject('kor')" style="border-color: #ff9a9e;">국어</div>
+                <div class="nav-btn" onclick="selectSubject('soc')" style="border-color: #84fab0;">사회</div>
+                <div class="nav-btn" onclick="selectSubject('eng')" style="border-color: #a1c4fd;">영어</div>
+            </div>
+
+            <div id="mynetwork"></div>
+
+            <div class="footer-msg" id="footerText">
+                원하는 과목 클릭
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const dataDetails = {
+            'kor': [
+                { id: 'k1', fullText: '2국02-01: 글자, 단어, 문장, 짧은 글을 정확하게 소리 내어 읽는다.', url: 'https://www.edunet.net/nview.do?contentsNo=202115' },
+                { id: 'k2', fullText: '2국02-02: 의미가 잘 드러나도록 문장과 짧은 글을 알맞게 띄어 읽는다.', url: 'https://www.edunet.net/nview.do?contentsNo=202117' },
+                { id: 'k3', fullText: '2국02-03: 글을 읽고 중심 내용을 확인한다.', url: 'https://primary.ebs.co.kr/course/view?courseId=10204515' },
+                { id: 'k4', fullText: '2국02-04: 인물의 마음이나 생각을 짐작하고 이를 자신과 비교하며 글을 읽는다.', url: 'https://www.edunet.net/nview.do?contentsNo=202123' },
+                { id: 'k5', fullText: '2국02-05: 읽기에 흥미를 가지고 즐겨 읽는 태도를 지닌다.', url: 'http://www.bookteen.or.kr' },
+                { id: 'k6', fullText: '2국01-01: 중요한 내용이나 일이 일어난 순서를 고려하며 듣고 말한다.', url: 'https://www.edunet.net/nview.do?contentsNo=202081' },
+                { id: 'k7', fullText: '2국01-02: 바르고 고운 말로 서로의 감정을 나누며 듣고 말한다.', url: 'https://primary.ebs.co.kr/course/view?courseId=10204512' },
+                { id: 'k8', fullText: '2국01-03: 상대의 말을 집중하여 듣고 말차례를 지키며 대화한다.', url: 'https://www.edunet.net/nview.do?contentsNo=202085' },
+                { id: 'k9', fullText: '2국01-04: 자신의 경험이나 생각을 바른 자세로 발표한다.', url: 'https://www.edunet.net/nview.do?contentsNo=202087' },
+                { id: 'k10', fullText: '2국01-05: 듣기와 말하기에 관심과 흥미를 가진다.', url: 'https://www.edunet.net/nview.do?contentsNo=202089' }
+            ],
+            'soc': [
+                { id: 's1', fullText: '4사02-01: 일상 속에서 시간의 흐름을 통한 역사의 시간 개념 이해', url: 'https://www.edunet.net/nview.do?contentsNo=210165' },
+                { id: 's2', fullText: '4사02-02: 오래된 물건이나 자료들을 통해 과거의 모습 살펴보기', url: 'http://www.emuseum.go.kr' },
+                { id: 's3', fullText: '4사02-03: 지역의 변화상을 보여주는 역사 자료 분석', url: 'http://www.grandculture.net' },
+                { id: 's4', fullText: '4사03-01: 최근 사회 변화의 양상과 특징 파악', url: 'https://kostat.go.kr/total/index.action' },
+                { id: 's5', fullText: '4사03-02: 문화 다양성 확산 및 문화 존중 태도', url: 'https://www.multiculture.go.kr' },
+                { id: 's6', fullText: '4사04-01: 옛날 풍습과 오늘날의 변화상 비교', url: 'https://www.nfm.go.kr' },
+                { id: 's7', fullText: '4사04-02: 교통의 변화에 따른 이동과 생활 모습의 변화', url: 'https://www.edunet.net/nview.do?contentsNo=210211' },
+                { id: 's8', fullText: '4사04-03: 통신수단의 변화에 따른 의사소통 방식의 변화', url: 'https://www.edunet.net/nview.do?contentsNo=210213' },
+                { id: 's9', fullText: '4사05-01: 지도의 종류와 지도의 요소 이해', url: 'https://map.ngii.go.kr' },
+                { id: 's10', fullText: '4사05-02: 지도에서 우리 지역의 위치 파악 및 정보 탐색', url: 'https://www.vworld.kr' }
+            ],
+            'eng': [
+                { id: 'e1', fullText: '4영01-01: 알파벳과 간단한 단어 소리 식별', url: 'https://primary.ebs.co.kr/course/view?courseId=10203531' },
+                { id: 'e2', fullText: '4영01-02: 알파벳 대소문자 식별 및 읽기', url: 'https://www.starfall.com/h/abcs/' },
+                { id: 'e3', fullText: '4영01-03: 단어, 어구, 문장의 강세, 리듬, 억양 식별', url: 'https://learnenglishkids.britishcouncil.org/listen-watch' },
+                { id: 'e4', fullText: '4영01-04: 소리와 철자의 관계 이해 및 소리 내어 읽기', url: 'https://www.edunet.net/nview.do?contentsNo=202353' },
+                { id: 'e5', fullText: '4영01-05: 단어, 어구, 문장의 의미 이해', url: 'https://primary.ebs.co.kr/course/view?courseId=10203534' },
+                { id: 'e6', fullText: '4영01-06: 자기 주변 주제 담화의 주요 정보 파악', url: 'https://www.edunet.net/nview.do?contentsNo=202357' },
+                { id: 'e7', fullText: '4영01-07: 전략 활용 담화/문장 듣기 및 읽기', url: 'https://www.readingrockets.org' },
+                { id: 'e8', fullText: '4영01-08: 다양한 매체 담화나 문장에 흥미 갖기', url: 'https://pbskids.org/games/reading' },
+                { id: 'e9', fullText: '4영01-09: 시, 노래, 이야기를 공감하며 듣기', url: 'https://www.youtube.com/@SuperSimpleSongs' },
+                { id: 'e10', fullText: '4영01-10: 문화 담화나 문장을 존중의 태도로 듣기/읽기', url: 'https://kids.nationalgeographic.com' }
+            ]
+        };
+
+        const rootNodes = [
+            { id: 'root_kor', label: '국어', color: '#ff9a9e', x: 0, y: -200 },
+            { id: 'root_soc', label: '사회', color: '#84fab0', x: -250, y: 150 }, // Bottom Left
+            { id: 'root_eng', label: '영어', color: '#a1c4fd', x: 250, y: 150 }  // Bottom Right
+        ];
+
+        // Convert to Vis.js format with increased size
+        const initialNodes = rootNodes.map(n => ({
+            id: n.id,
+            label: n.label,
+            color: { background: n.color, border: 'white' },
+            size: 80, // Much bigger
+            font: { size: 40, face: 'Pretendard', color: '#fff', bold: true },
+            borderWidth: 4,
+            widthConstraint: { minimum: 120, maximum: 120 },
+            shape: 'circle',
+            x: n.x,
+            y: n.y,
+            fixed: false,
+            shadow: { color: 'rgba(0,0,0,0.5)', size: 15, x: 0, y: 10 }
+        }));
+
+        const container = document.getElementById('mynetwork');
+        const data = {
+            nodes: new vis.DataSet(initialNodes),
+            edges: new vis.DataSet([])
+        };
+
+        const options = {
+            nodes: {
+                shape: 'circle',
+                borderWidth: 2,
+                shadow: true,
+                font: { color: 'white' } // Ensure default font color is good
+            },
+            edges: {
+                width: 2,
+                color: { color: 'rgba(255,255,255,0.4)' },
+                smooth: { type: 'continuous' }
+            },
+            physics: {
+                solver: 'forceAtlas2Based',
+                forceAtlas2Based: {
+                    gravitationalConstant: -150,
+                    centralGravity: 0.005,
+                    springLength: 200,
+                    springConstant: 0.05,
+                    damping: 0.8
+                },
+                stabilization: { enabled: true, iterations: 1000 }
+            },
+            interaction: { hover: true }
+        };
+
+        const network = new vis.Network(container, data, options);
+
+        let currentSubject = null;
+
+        network.on("click", function (params) {
+            if (params.nodes.length > 0) {
+                const nodeId = params.nodes[0];
+
+                if (nodeId.startsWith('root_')) {
+                    const subj = nodeId.split('_')[1];
+                    selectSubject(subj);
+                } else {
+                    const node = data.nodes.get(nodeId);
+                    if (node.url) window.open(node.url, '_blank');
+                }
+            }
+        });
+
+        network.on("hoverNode", function () { container.style.cursor = 'pointer'; });
+        network.on("blurNode", function () { container.style.cursor = 'default'; });
+
+        function selectSubject(subjKey) {
+            if (currentSubject === subjKey) return;
+
+            if (currentSubject) {
+                const oldIds = dataDetails[currentSubject].map(d => d.id);
+                data.nodes.remove(oldIds);
+            }
+
+            currentSubject = subjKey;
+
+            const parentId = `root_${subjKey}`;
+            const parentPos = network.getPositions([parentId])[parentId] || { x: 0, y: 0 };
+
+            const newNodes = dataDetails[subjKey].map(item => ({
+                id: item.id,
+                label: item.fullText, // Directly using full text, no line break helper needed as box shape handles wrapping often, but lets see.
+                url: item.url,
+                color: { background: 'rgba(255,255,255,0.95)', border: '#fff' },
+                shape: 'box',
+                font: { size: 16, color: '#333', align: 'left' },
+                margin: 15,
+                widthConstraint: { maximum: 300 },
+                x: parentPos.x + (Math.random() - 0.5) * 50,
+                y: parentPos.y + (Math.random() - 0.5) * 50
+            }));
+
+            const newEdges = dataDetails[subjKey].map(item => ({
+                from: parentId,
+                to: item.id
+            }));
+
+            data.nodes.add(newNodes);
+            data.edges.add(newEdges);
+
+            document.getElementById('footerText').innerText = "성취 기준을 누르면 도움 자료 사이트로 연결돼요";
+            document.getElementById('navIcons').style.display = 'flex';
+
+            network.fit({
+                nodes: [parentId, ...newNodes.map(n => n.id)],
+                animation: { duration: 1000, easingFunction: 'easeInOutQuad' }
+            });
+        }
+
+        function sendMsg() {
+            const input = document.getElementById('chatInput');
+            const txt = input.value.trim();
+            if (!txt) return;
+
+            addMsg(txt, 'user');
+            input.value = '';
+
+            setTimeout(() => {
+                let reply = "죄송합니다. 이해하지 못했어요.";
+                if (txt.includes('국어')) reply = "[국어] 읽기, 듣기, 말하기의 기초를 다집니다. 분홍색 아이콘을 눌러보세요!";
+                else if (txt.includes('사회')) reply = "[사회] 역사와 우리 고장의 변화를 배웁니다. 초록색 아이콘입니다.";
+                else if (txt.includes('영어')) reply = "[영어] 알파벳과 기초 회화를 학습합니다. 파란색 아이콘입니다.";
+                else if (txt.includes('안녕')) reply = "안녕하세요! 무엇이 궁금하신가요?";
+
+                addMsg(reply, 'bot');
+            }, 600);
+        }
+
+        function addMsg(txt, type) {
+            const box = document.getElementById('chatHistory');
+            const div = document.createElement('div');
+            div.className = `chat-msg ${type}`;
+            div.innerHTML = txt;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMsg();
+        }
+
+    </script>
+</body>
+
+</html>
